@@ -1,18 +1,34 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <div v-if="tableData.length > 0">
+      <LastFMTable :tableData="tableData"/>
+    </div>
+    <h3 v-else>Fetching data....</h3>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import LastFMTable from "@/components/LastFMTable.vue";
 
 export default {
   name: "home",
   components: {
-    HelloWorld
+    LastFMTable
+  },
+  data() {
+    return {
+      tableData: []
+    };
+  },
+  created() {
+    axios
+      .get(
+        "https://gist.githubusercontent.com/EdvinasBa/cad49d4ad40a0a87f4566ebcca2f22dd/raw/9e657a39f2100b19eb808c9c7dd444f2380d3d5a/scrobbles.json"
+      )
+      .then(res => (this.tableData = res.data))
+      .catch(err => console.log(err));
   }
 };
 </script>
