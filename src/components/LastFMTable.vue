@@ -153,8 +153,8 @@ export default {
           // eslint-disable-next-line
           // second = second.toLowerCase().match(/[A-Za-z0-9]+/g) || "";
 
-          first = first instanceof Array ? first.join("") : first;
-          second = second instanceof Array ? second.join("") : second;
+          // first = first instanceof Array ? first.join("") : first;
+          // second = second instanceof Array ? second.join("") : second;
 
           if (first < second) {
             return -1;
