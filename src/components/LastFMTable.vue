@@ -4,12 +4,8 @@
       <span class="info--text">Current page: {{ currentPage }}</span>
       <span class="info--text">Number of items: {{ tableData.length }}</span>
       <label class="info--text">
-        Show all entries?
-        [ may be slow with too many entries ]
-        <input
-          type="checkbox"
-          v-model="showAllEntries"
-        >
+        Show all entries? [ may be slow with too many entries ]
+        <input type="checkbox" v-model="showAllEntries" />
       </label>
     </div>
     <table>
@@ -35,7 +31,7 @@
         <LastFMEntry
           v-for="(item, index) in paginatedData"
           v-bind:key="index"
-          v-on:highlight-item="$emit('highlight-item', index)"
+          v-on:highlight-item="highlightItem(id)"
           :artist="item.Artist"
           :album="item.Album"
           :track="item.Track"
@@ -45,9 +41,18 @@
       </tbody>
     </table>
     <div class="pagination" v-if="!showAllEntries">
-      <button :disabled="currentPage === 0" v-on:click="prevPage">Previous</button>
-      <input v-model.number="currentPage" :max="pageCount" :min="0" type="number">
-      <button :disabled="currentPage >= pageCount - 1" v-on:click="nextPage">Next</button>
+      <button :disabled="currentPage === 0" v-on:click="prevPage">
+        Previous
+      </button>
+      <input
+        v-model.number="currentPage"
+        :max="pageCount"
+        :min="0"
+        type="number"
+      />
+      <button :disabled="currentPage >= pageCount - 1" v-on:click="nextPage">
+        Next
+      </button>
     </div>
   </section>
 </template>
@@ -104,6 +109,9 @@ export default {
           return 0;
         });
       }
+    },
+    highlightItem(id) {
+      this.paginatedData[id].clicked = true;
     }
   },
   computed: {
@@ -166,6 +174,9 @@ tr > td:nth-child(4) {
 
 tr:nth-child(even) {
   background: #dcf3e8;
+}
+tr:hover {
+  background: #bcf5d9;
 }
 th {
   cursor: pointer;

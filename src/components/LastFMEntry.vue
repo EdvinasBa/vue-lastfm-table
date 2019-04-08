@@ -13,7 +13,7 @@ export default {
     artist: String,
     album: String,
     track: String,
-    scrobbleDate: Date,
+    scrobbleDate: String,
     id: Number
   },
   filters: {
@@ -23,6 +23,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

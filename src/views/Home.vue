@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div v-if="tableData.length > 0">
-      <LastFMTable :tableData="tableData"/>
+      <LastFMTable :tableData="tableData" />
     </div>
     <h3 v-else>Fetching data....</h3>
   </div>
