@@ -1,5 +1,8 @@
 <template>
-  <tr v-on:click="$emit('show-entry', id)">
+  <tr
+    v-on:click="$emit('show-entry', id)"
+    v-bind:class="{ 'is-clicked': isClicked }"
+  >
     <td>{{ artist | changeEmpty }}</td>
     <td>{{ album | changeEmpty }}</td>
     <td>{{ track | changeEmpty }}</td>
@@ -14,6 +17,7 @@ export default {
     album: [Number, String],
     track: [Number, String],
     scrobbleDate: [Number, String],
+    isClicked: Boolean,
     id: Number
   },
   filters: {
@@ -23,3 +27,10 @@ export default {
   }
 };
 </script>
+
+<style>
+.is-clicked {
+  background: rgba(155, 77, 202, 0.3);
+  font-weight: 600;
+}
+</style>

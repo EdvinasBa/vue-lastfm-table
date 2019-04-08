@@ -8,7 +8,7 @@
           <strong>{{ currentPage }}</strong>
         </span>
         <span>
-          Number of items:
+          Number of entries:
           <strong>{{ tableData.length }}</strong>
         </span>
         <span>
@@ -17,11 +17,22 @@
         </span>
         <label>
           Show all entries? [ may be slow with too many entries ]
-          <input
-            type="checkbox"
-            v-model="showAllEntries"
-          >
+          <input type="checkbox" v-model="showAllEntries" />
         </label>
+      </div>
+      <div class="pagination" v-if="!showAllEntries">
+        <button :disabled="currentPage === 0" v-on:click="prevPage">
+          Previous
+        </button>
+        <input
+          v-model.number="currentPage"
+          :max="pageCount"
+          :min="0"
+          type="number"
+        />
+        <button :disabled="currentPage >= pageCount - 1" v-on:click="nextPage">
+          Next
+        </button>
       </div>
       <div v-if="currentClicked !== -1" class="info__clicked">
         <strong>Last clicked element:</strong>
@@ -42,10 +53,8 @@
           <strong>{{ currentClickedElement.Date }}</strong>
         </span>
       </div>
-      <div class="pagination" v-if="!showAllEntries">
-        <button :disabled="currentPage === 0" v-on:click="prevPage">Previous</button>
-        <input v-model.number="currentPage" :max="pageCount" :min="0" type="number">
-        <button :disabled="currentPage >= pageCount - 1" v-on:click="nextPage">Next</button>
+      <div v-else class="info__clicked">
+        <strong>Click an element...</strong>
       </div>
     </div>
     <div class="data">
@@ -67,6 +76,7 @@
             :album="item.Album"
             :track="item.Track"
             :scrobbleDate="item.Date"
+            :is-clicked="index === currentClicked"
             :id="index"
           />
         </tbody>
@@ -79,6 +89,7 @@
             :album="item.Album"
             :track="item.Track"
             :scrobbleDate="item.Date"
+            :is-clicked="index === currentClicked"
             :id="index"
           />
         </tbody>
@@ -169,7 +180,7 @@ export default {
   },
   computed: {
     pageCount() {
-      let l = this.tableData.length,
+      const l = this.tableData.length,
         s = this.size;
       return Math.floor(l / s);
     },
@@ -182,6 +193,14 @@ export default {
       } else {
         return this.paginateData()[this.currentClicked];
       }
+    }
+  },
+  watch: {
+    currentPage: function() {
+      this.currentClicked = -1;
+    },
+    showAllEntries: function() {
+      this.currentClicked = -1;
     }
   }
 };
@@ -225,7 +244,8 @@ tr {
   padding: 0 0.5em;
   border-bottom: 0.1rem solid #e1e1e1;
 }
-tr > th, tr > td {
+tr > th,
+tr > td {
   border-bottom: none;
 }
 tr > th:nth-child(1),
@@ -248,11 +268,11 @@ tr > td:nth-child(4) {
 }
 
 tr:nth-child(even) {
-  background: rgba(155,77,202,0.05);
+  background: rgba(155, 77, 202, 0.05);
 }
 tr:hover {
   cursor: pointer;
-  background: rgba(155,77,202,0.2);
+  background: rgba(155, 77, 202, 0.2);
 }
 .pagination {
   display: flex;
