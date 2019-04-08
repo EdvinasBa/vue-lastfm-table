@@ -1,5 +1,5 @@
 <template>
-  <tr>
+  <tr v-on:click="$emit('show-entry', id)">
     <td>{{ artist | changeEmpty }}</td>
     <td>{{ album | changeEmpty }}</td>
     <td>{{ track | changeEmpty }}</td>
@@ -10,10 +10,10 @@
 <script>
 export default {
   props: {
-    artist: String,
-    album: String,
-    track: String,
-    scrobbleDate: String,
+    artist: Number | String,
+    album: Number | String,
+    track: Number | String,
+    scrobbleDate: Number | String,
     id: Number
   },
   filters: {

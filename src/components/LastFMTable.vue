@@ -1,59 +1,88 @@
 <template>
-  <section>
+  <section class="last-fm-data">
     <div class="info">
-      <span class="info--text">Current page: <strong> {{ currentPage }} </strong> </span>
-      <span class="info--text">Number of items: <strong> {{ tableData.length }} </strong></span>
-      <span class="info--text">Currently sorting by: <strong> {{ currentlySortedBy }} </strong> </span>
-      <label class="info--text">
-        Show all entries? [ may be slow with too many entries ]
-        <input type="checkbox" v-model="showAllEntries" />
-      </label>
+      <div class="info__general">
+        <strong>General info:</strong>
+        <span>
+          Current page:
+          <strong>{{ currentPage }}</strong>
+        </span>
+        <span>
+          Number of items:
+          <strong>{{ tableData.length }}</strong>
+        </span>
+        <span>
+          Currently sorting by:
+          <strong>{{ currentlySortedBy }}</strong>
+        </span>
+        <label>
+          Show all entries? [ may be slow with too many entries ]
+          <input
+            type="checkbox"
+            v-model="showAllEntries"
+          >
+        </label>
+      </div>
+      <div v-if="currentClicked !== -1" class="info__clicked">
+        <strong>Last clicked element:</strong>
+        <span>
+          Artist:
+          <strong>{{ currentClickedElement.Artist }}</strong>
+        </span>
+        <span>
+          Album:
+          <strong>{{ currentClickedElement.Album }}</strong>
+        </span>
+        <span>
+          Track:
+          <strong>{{ currentClickedElement.Track }}</strong>
+        </span>
+        <span>
+          Date:
+          <strong>{{ currentClickedElement.Date }}</strong>
+        </span>
+      </div>
+      <div class="pagination" v-if="!showAllEntries">
+        <button :disabled="currentPage === 0" v-on:click="prevPage">Previous</button>
+        <input v-model.number="currentPage" :max="pageCount" :min="0" type="number">
+        <button :disabled="currentPage >= pageCount - 1" v-on:click="nextPage">Next</button>
+      </div>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th v-on:click="sortBy('Artist')">Artist</th>
-          <th v-on:click="sortBy('Album')">Album</th>
-          <th v-on:click="sortBy('Track')">Track</th>
-          <th v-on:click="sortBy('Date')">Date</th>
-        </tr>
-      </thead>
-      <tbody v-if="showAllEntries">
-        <LastFMEntry
-          v-for="(item, index) in tableData"
-          v-bind:key="index"
-          :artist="item.Artist"
-          :album="item.Album"
-          :track="item.Track"
-          :scrobbleDate="item.Date"
-          :id="index"
-        />
-      </tbody>
-      <tbody v-else>
-        <LastFMEntry
-          v-for="(item, index) in paginatedData"
-          v-bind:key="index"
-          :artist="item.Artist | toString"
-          :album="item.Album | toString"
-          :track="item.Track | toString"
-          :scrobbleDate="item.Date"
-          :id="index"
-        />
-      </tbody>
-    </table>
-    <div class="pagination" v-if="!showAllEntries">
-      <button :disabled="currentPage === 0" v-on:click="prevPage">
-        Previous
-      </button>
-      <input
-        v-model.number="currentPage"
-        :max="pageCount"
-        :min="0"
-        type="number"
-      />
-      <button :disabled="currentPage >= pageCount - 1" v-on:click="nextPage">
-        Next
-      </button>
+    <div class="data">
+      <table>
+        <thead>
+          <tr>
+            <th v-on:click="sortBy('Artist')">Artist</th>
+            <th v-on:click="sortBy('Album')">Album</th>
+            <th v-on:click="sortBy('Track')">Track</th>
+            <th v-on:click="sortBy('Date')">Date</th>
+          </tr>
+        </thead>
+        <tbody v-if="showAllEntries">
+          <LastFMEntry
+            v-for="(item, index) in tableData"
+            v-bind:key="index"
+            v-on:show-entry="changeEntry"
+            :artist="item.Artist"
+            :album="item.Album"
+            :track="item.Track"
+            :scrobbleDate="item.Date"
+            :id="index"
+          />
+        </tbody>
+        <tbody v-else>
+          <LastFMEntry
+            v-for="(item, index) in paginatedData"
+            v-bind:key="index"
+            v-on:show-entry="changeEntry"
+            :artist="item.Artist"
+            :album="item.Album"
+            :track="item.Track"
+            :scrobbleDate="item.Date"
+            :id="index"
+          />
+        </tbody>
+      </table>
     </div>
   </section>
 </template>
@@ -89,6 +118,8 @@ export default {
       this.currentPage--;
     },
     sortBy(sortKey) {
+      this.currentClicked = -1;
+
       if (this.currentlySortedBy === sortKey) {
         this.tableData.reverse();
         return;
@@ -126,6 +157,14 @@ export default {
         });
       }
       this.currentPage = 0;
+    },
+    changeEntry(id) {
+      this.currentClicked = id;
+    },
+    paginateData() {
+      const start = this.currentPage * this.size,
+        end = start + this.size;
+      return this.tableData.slice(start, end);
     }
   },
   computed: {
@@ -135,42 +174,61 @@ export default {
       return Math.floor(l / s);
     },
     paginatedData() {
-      const start = this.currentPage * this.size,
-        end = start + this.size;
-      return this.tableData.slice(start, end);
-    }
-  },
-  filters: {
-    toString: value => {
-      return value.toString();
+      return this.paginateData();
+    },
+    currentClickedElement() {
+      if (this.showAllEntries) {
+        console.log(this.paginateData()[this.currentClicked]);
+        return this.tableData[this.currentClicked];
+      } else {
+        console.log(this.paginateData()[this.currentClicked]);
+        return this.paginateData()[this.currentClicked];
+      }
     }
   }
 };
 </script>
 
 <style>
-.info {
+.info__general,
+.info__clicked {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   align-items: flex-start;
+  border-bottom: 1px solid #e1e1e1;
+  margin: 1em 0;
+  padding: 1em 0;
 }
-
-table {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+.info__general {
+  margin-right: 1em;
+  padding-right: 1em;
+}
+.info {
+  flex: 0 0 30%;
+  position: sticky;
+  top: 0;
+  max-height: 90vh;
+  padding: 1em 0;
+  text-align: left;
+  line-height: 1.5;
+}
+.data {
+  flex: 0 0 70%;
+}
+.last-fm-data {
+  display: flex;
 }
 tr {
   display: flex;
   justify-content: space-between;
   align-items: center;
   text-align: center;
-  min-height: 2.5em;
   text-align: left;
   padding: 0 0.5em;
+  border-bottom: 0.1rem solid #e1e1e1;
+}
+tr > th, tr > td {
+  border-bottom: none;
 }
 tr > th:nth-child(1),
 tr > td:nth-child(1) {
@@ -192,26 +250,19 @@ tr > td:nth-child(4) {
 }
 
 tr:nth-child(even) {
-  background: #dcf3e8;
+  background: rgba(155,77,202,0.05);
 }
 tr:hover {
-  background: #bcf5d9;
-}
-th {
   cursor: pointer;
+  background: rgba(155,77,202,0.2);
 }
-button {
-  cursor: pointer;
-  margin: 1em 2em;
-  border: none;
-  background: #42b983;
-  border-radius: 0.2em;
-  font-weight: 600;
-  color: white;
-  padding: 1em 2em;
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin: 1em auto;
+  max-width: 25em;
 }
-
-button:disabled {
-  background: #dcf3e8;
+.pagination input {
+  width: auto;
 }
 </style>
