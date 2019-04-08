@@ -28,7 +28,8 @@ export default {
         "https://gist.githubusercontent.com/EdvinasBa/cad49d4ad40a0a87f4566ebcca2f22dd/raw/9e657a39f2100b19eb808c9c7dd444f2380d3d5a/scrobbles.json"
       )
       .then(res => (this.tableData = res.data))
-      .catch(err => console.log(err));
+      // eslint-disable-next-line
+      .catch(err => console.error(err));
   }
 };
 </script>
