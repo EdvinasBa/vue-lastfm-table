@@ -1,5 +1,8 @@
 # vue-lastfm-table
-
+```
+I used my last.fm profile music listening data (scrobbles) for the table.
+Below is default vue cli README.
+```
 ## Project setup
 ```
 npm install
