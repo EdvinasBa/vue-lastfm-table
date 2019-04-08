@@ -1,5 +1,5 @@
 <template>
-  <tr v-on:click="$emit('highlight-item', id)">
+  <tr>
     <td>{{ artist | changeEmpty }}</td>
     <td>{{ album | changeEmpty }}</td>
     <td>{{ track | changeEmpty }}</td>

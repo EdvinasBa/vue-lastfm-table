@@ -21,17 +21,17 @@
         <LastFMEntry
           v-for="(item, index) in tableData"
           v-bind:key="index"
-          :Artist="item.Artist"
-          :Album="item.Album"
-          :Track="item.Track"
-          :ScrobbleDate="item.Date"
+          :artist="item.Artist"
+          :album="item.Album"
+          :track="item.Track"
+          :scrobbleDate="item.Date"
+          :id="index"
         />
       </tbody>
       <tbody v-else>
         <LastFMEntry
           v-for="(item, index) in paginatedData"
           v-bind:key="index"
-          v-on:highlight-item="highlightItem(id)"
           :artist="item.Artist"
           :album="item.Album"
           :track="item.Track"
@@ -68,6 +68,7 @@ export default {
   data() {
     return {
       currentPage: 0,
+      currentClicked: -1,
       size: 15,
       showAllEntries: false,
       currentlySortedBy: "Date"
@@ -100,18 +101,27 @@ export default {
         });
       } else {
         this.tableData.sort((a, b) => {
-          if (a[sortKey] < b[sortKey]) {
+          let first = a[sortKey].toString();
+          let second = b[sortKey].toString();
+
+          // eslint-disable-next-line
+          first = first.toLowerCase().match(/[A-Za-z0-9]+/g);
+
+          // eslint-disable-next-line
+          second = second.toLowerCase().match(/[A-Za-z0-9]+/g);
+
+          first = first instanceof Array ? first.join() : first;
+          second = second instanceof Array ? second.join() : second;
+
+          if (first < second) {
             return -1;
           }
-          if (a[sortKey] > b[sortKey]) {
+          if (first > second) {
             return 1;
           }
           return 0;
         });
       }
-    },
-    highlightItem(id) {
-      this.paginatedData[id].clicked = true;
     }
   },
   computed: {
