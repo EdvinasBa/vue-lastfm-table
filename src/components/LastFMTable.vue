@@ -1,8 +1,9 @@
 <template>
   <section>
     <div class="info">
-      <span class="info--text">Current page: {{ currentPage }}</span>
-      <span class="info--text">Number of items: {{ tableData.length }}</span>
+      <span class="info--text">Current page: <strong> {{ currentPage }} </strong> </span>
+      <span class="info--text">Number of items: <strong> {{ tableData.length }} </strong></span>
+      <span class="info--text">Currently sorting by: <strong> {{ currentlySortedBy }} </strong> </span>
       <label class="info--text">
         Show all entries? [ may be slow with too many entries ]
         <input type="checkbox" v-model="showAllEntries" />
@@ -32,9 +33,9 @@
         <LastFMEntry
           v-for="(item, index) in paginatedData"
           v-bind:key="index"
-          :artist="item.Artist"
-          :album="item.Album"
-          :track="item.Track"
+          :artist="item.Artist | toString"
+          :album="item.Album | toString"
+          :track="item.Track | toString"
           :scrobbleDate="item.Date"
           :id="index"
         />
@@ -101,27 +102,30 @@ export default {
         });
       } else {
         this.tableData.sort((a, b) => {
-          let first = a[sortKey].toString();
-          let second = b[sortKey].toString();
+          let first = a[sortKey].toString().toLowerCase() || "";
+          let second = b[sortKey].toString().toLowerCase() || "";
 
           // eslint-disable-next-line
-          first = first.toLowerCase().match(/[A-Za-z0-9]+/g);
+          // first = first.toLowerCase().match(/[A-Za-z0-9]+/g) || "";
 
           // eslint-disable-next-line
-          second = second.toLowerCase().match(/[A-Za-z0-9]+/g);
+          // second = second.toLowerCase().match(/[A-Za-z0-9]+/g) || "";
 
-          first = first instanceof Array ? first.join() : first;
-          second = second instanceof Array ? second.join() : second;
+          first = first instanceof Array ? first.join("") : first;
+          second = second instanceof Array ? second.join("") : second;
 
           if (first < second) {
             return -1;
           }
+
           if (first > second) {
             return 1;
           }
+
           return 0;
         });
       }
+      this.currentPage = 0;
     }
   },
   computed: {
@@ -134,6 +138,11 @@ export default {
       const start = this.currentPage * this.size,
         end = start + this.size;
       return this.tableData.slice(start, end);
+    }
+  },
+  filters: {
+    toString: value => {
+      return value.toString();
     }
   }
 };
