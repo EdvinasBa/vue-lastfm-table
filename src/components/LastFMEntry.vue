@@ -33,4 +33,35 @@ export default {
   background: rgba(155, 77, 202, 0.3);
   font-weight: 600;
 }
+@media screen and (max-width: 768px) {
+  thead tr th {
+    text-align: left;
+    width: 100%;
+    padding-left: 0;
+  }
+  tr {
+    display: flex;
+    flex-direction: column;
+  }
+  td {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  td:first-child {
+    padding-left: 1.5rem;
+  }
+  td:nth-child(1)::before {
+    content: "Artist:";
+  }
+  td:nth-child(2)::before {
+    content: "Album:";
+  }
+  td:nth-child(3)::before {
+    content: "Track:";
+  }
+  td:nth-child(4)::before {
+    content: "Date:";
+  }
+}
 </style>

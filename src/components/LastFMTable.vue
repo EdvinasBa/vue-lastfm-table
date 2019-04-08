@@ -235,6 +235,17 @@ export default {
 .last-fm-data {
   display: flex;
 }
+@media screen and (max-width: 768px) {
+  .last-fm-data {
+    flex-wrap: wrap;
+  }
+  .data {
+    flex: auto;
+  }
+  .info {
+    position: static;
+  }
+}
 tr {
   display: flex;
   justify-content: space-between;
