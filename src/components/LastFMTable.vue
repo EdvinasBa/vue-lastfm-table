@@ -178,10 +178,8 @@ export default {
     },
     currentClickedElement() {
       if (this.showAllEntries) {
-        console.log(this.paginateData()[this.currentClicked]);
         return this.tableData[this.currentClicked];
       } else {
-        console.log(this.paginateData()[this.currentClicked]);
         return this.paginateData()[this.currentClicked];
       }
     }
