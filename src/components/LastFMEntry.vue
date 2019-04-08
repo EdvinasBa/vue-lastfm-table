@@ -10,10 +10,10 @@
 <script>
 export default {
   props: {
-    artist: Number | String,
-    album: Number | String,
-    track: Number | String,
-    scrobbleDate: Number | String,
+    artist: [Number, String],
+    album: [Number, String],
+    track: [Number, String],
+    scrobbleDate: [Number, String],
     id: Number
   },
   filters: {
