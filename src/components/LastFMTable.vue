@@ -257,7 +257,6 @@ tr:hover {
 .pagination {
   display: flex;
   justify-content: space-between;
-  margin: 1em auto;
   max-width: 25em;
 }
 .pagination input {
