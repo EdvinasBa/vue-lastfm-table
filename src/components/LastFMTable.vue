@@ -67,22 +67,9 @@
             <th v-on:click="sortBy('Date')">Date</th>
           </tr>
         </thead>
-        <tbody v-if="showAllEntries">
+        <tbody>
           <LastFMEntry
-            v-for="(item, index) in tableData"
-            v-bind:key="index"
-            v-on:show-entry="changeEntry"
-            :artist="item.Artist"
-            :album="item.Album"
-            :track="item.Track"
-            :scrobbleDate="item.Date"
-            :is-clicked="index === currentClicked"
-            :id="index"
-          />
-        </tbody>
-        <tbody v-else>
-          <LastFMEntry
-            v-for="(item, index) in paginatedData"
+            v-for="(item, index) in showAllEntries ? tableData : paginatedData"
             v-bind:key="index"
             v-on:show-entry="changeEntry"
             :artist="item.Artist"
