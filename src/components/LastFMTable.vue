@@ -213,6 +213,7 @@ export default {
   top: 0;
   max-height: 90vh;
   padding: 1em 0;
+  margin-right: 1em;
   text-align: left;
   line-height: 1.5;
 }
@@ -231,6 +232,8 @@ export default {
   }
   .info {
     position: static;
+    flex: auto;
+    margin-right: 0;
   }
 }
 tr {
@@ -275,9 +278,10 @@ tr:hover {
 .pagination {
   display: flex;
   justify-content: space-between;
-  max-width: 25em;
+  max-width: 24em;
 }
 .pagination input {
   width: auto;
+  max-width: 4em;
 }
 </style>
