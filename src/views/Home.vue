@@ -25,7 +25,7 @@ export default {
   created() {
     axios
       .get(
-        "https://gist.githubusercontent.com/EdvinasBa/cad49d4ad40a0a87f4566ebcca2f22dd/raw/9e657a39f2100b19eb808c9c7dd444f2380d3d5a/scrobbles.json"
+        "https://gist.githubusercontent.com/EdvinasBa/cad49d4ad40a0a87f4566ebcca2f22dd/raw/9cdd3eb4bb340786fff476af45010454c45bb94f/scrobbles.json"
       )
       .then(res => (this.tableData = res.data))
       // eslint-disable-next-line
